@@ -16,6 +16,8 @@
             height: 100vh;
             text-align: center;
             overflow: hidden;
+            position: relative;
+            flex-direction: column;
         }
         #content {
             background: rgba(255, 255, 255, 0.9);
@@ -24,6 +26,7 @@
             box-shadow: 0px 0px 15px rgba(255, 0, 102, 0.5);
             border: 3px solid #ff69b4;
             position: relative;
+            z-index: 10;
         }
         h1 {
             color: #ff0066;
@@ -34,57 +37,57 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            position: relative;
             flex-wrap: wrap;
         }
-        #yesButton, #no, #resetButton {
+        #yesButton, #no, #resetButton, #playMusic, .random-text {
             font-size: 22px;
             font-weight: bold;
             border-radius: 20px;
             padding: 10px 20px;
             cursor: pointer;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
         }
         #yesButton {
             background-color: #ff1493;
             color: #fff;
             box-shadow: 0px 0px 15px #ff69b4;
-            transition: transform 0.2s ease-in-out;
         }
         #no {
             background-color: #ff4500;
             color: #fff;
             box-shadow: 0px 0px 15px #ff0000;
-            transition: transform 0.2s ease-in-out;
         }
         #resetButton {
             background-color: #6a0dad;
             color: #fff;
             box-shadow: 0px 0px 15px #8a2be2;
-            margin-top: 20px;
         }
         #playMusic {
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 15px;
-            padding: 10px 20px;
-            cursor: pointer;
             background-color: #008000;
             color: white;
-            border: none;
             box-shadow: 0px 0px 15px #00cc00;
             margin-top: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        .random-text {
+            position: absolute;
+            background-color: #ff4500;
+            color: #fff;
+            box-shadow: 0px 0px 15px #ff0000;
+            transition: transform 0.2s ease-in-out;
+            max-width: 250px;
+            z-index: 9999; /* Ustawienie nad wszystkim */
+            padding: 10px;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Przycisk do odblokowania muzyki -->
-    <button id="playMusic">▶ Włącz muzykę</button>
-
-    <!-- Muzyka w tle -->
-    <audio id="bgMusic" loop>
-        <source src="https://media.vocaroo.com/mp3/1niulU8UNL2M" type="audio/mpeg">
-    </audio>
-
     <div id="content">
         <h1>Hej koleżanko, będziesz moją walentynką??? 💖</h1>
         <img id="valentineImage" src="https://i.imgur.com/drAJFI1.png" alt="Valentine's Day Image" style="max-width: 300px; height: auto;">
@@ -94,27 +97,95 @@
             <button id="no">💔 NIE!!!</button>
         </div>
         <br/>
+        <button id="playMusic">▶ Włącz muzykę</button>
+        <br/>
         <button id="resetButton">🔄 Powrót</button>
     </div>
 
+    <audio id="bgMusic" loop>
+        <source src="https://media.vocaroo.com/mp3/1niulU8UNL2M" type="audio/mpeg">
+    </audio>
+
     <script>
-        // Wymuszenie odtwarzania dźwięku po kliknięciu przycisku
-        document.getElementById("playMusic").addEventListener("click", function() {
-            var audio = document.getElementById("bgMusic");
-            audio.volume = 0.5; // Ustawienie głośności na 50%
-            audio.play().then(() => {
-                document.getElementById("playMusic").style.display = "none"; // Ukryj przycisk po włączeniu muzyki
-            }).catch(error => {
-                console.log("Błąd odtwarzania dźwięku:", error);
+        let activeText = null; // Przechowuje aktualnie wyświetlony napis
+
+        // Losowe teksty
+        const randomTexts = [
+            "Nie no weź... 💔",
+            "Aha nie miłooo 😢",
+            "Nie wiesz co tracisz 🤔",
+            "NIE ROB NADZEI 😞",
+            "Moje serce pęka na kawałki! 💔"
+        ];
+
+        // Losowe obrazki
+        const randomImages = [
+            "https://i.imgur.com/uWTuIIW.png",
+            "https://i.imgur.com/AVG5eKx.png",
+            "https://i.imgur.com/AF7dueg.jpeg",
+            "https://i.imgur.com/gTdRbkj.jpeg"
+        ];
+
+        // Generowanie losowego tekstu
+        function generateRandomText() {
+            // Jeśli istnieje stary tekst, usuń go
+            if (activeText) {
+                activeText.remove();
+                activeText = null;
+            }
+
+            // Tworzenie nowego napisu
+            const textElement = document.createElement("div");
+            textElement.classList.add("random-text");
+            textElement.textContent = randomTexts[Math.floor(Math.random() * randomTexts.length)];
+
+            // Losowa pozycja
+            const maxWidth = window.innerWidth - 300;
+            const maxHeight = window.innerHeight - 200;
+            const x = Math.random() * maxWidth;
+            const y = Math.random() * (maxHeight - 100) + 50;
+
+            textElement.style.left = `${x}px`;
+            textElement.style.top = `${y}px`;
+
+            // Dodanie do dokumentu
+            document.body.appendChild(textElement);
+            activeText = textElement;
+
+            // Zmiana obrazka
+            document.getElementById("valentineImage").src = randomImages[Math.floor(Math.random() * randomImages.length)];
+
+            // Po kliknięciu usuń napis i wygeneruj nowy
+            textElement.addEventListener("click", function () {
+                generateRandomText();
             });
+        }
+
+        // Obsługa kliknięcia przycisku "NIE"
+        document.getElementById("no").addEventListener("click", function () {
+            document.getElementById("no").style.display = "none"; // Ukrywa "NIE"
+            generateRandomText();
         });
 
+        // Obsługa kliknięcia przycisku "TAK"
         document.getElementById("yesButton").addEventListener("click", function() {
             alert("Kocham cię, miłego dnia! 💕");
         });
 
+        // Obsługa kliknięcia przycisku "Powrót"
         document.getElementById("resetButton").addEventListener("click", function() {
             location.reload();
+        });
+
+        // Obsługa przycisku muzyki
+        document.getElementById("playMusic").addEventListener("click", function() {
+            var audio = document.getElementById("bgMusic");
+            audio.volume = 0.5;
+            audio.play().then(() => {
+                document.getElementById("playMusic").style.display = "none"; // Ukrywa przycisk po włączeniu muzyki
+            }).catch(error => {
+                console.log("Błąd odtwarzania dźwięku:", error);
+            });
         });
     </script>
 </body>
