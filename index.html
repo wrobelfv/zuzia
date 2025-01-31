@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walentynka</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #ff0000, #ffffff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+        #content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(255, 0, 102, 0.5);
+            border: 3px solid #ff69b4;
+            position: relative;
+        }
+        h1 {
+            color: #ff0066;
+            text-shadow: 3px 3px 6px rgba(255, 0, 102, 0.7);
+            font-size: 28px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+        #yesButton, #no, #resetButton {
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #yesButton {
+            background-color: #ff1493;
+            color: #fff;
+            box-shadow: 0px 0px 15px #ff69b4;
+            transition: transform 0.2s ease-in-out;
+        }
+        #no {
+            background-color: #ff4500;
+            color: #fff;
+            box-shadow: 0px 0px 15px #ff0000;
+            transition: transform 0.2s ease-in-out;
+        }
+        #resetButton {
+            background-color: #6a0dad;
+            color: #fff;
+            box-shadow: 0px 0px 15px #8a2be2;
+            margin-top: 20px;
+        }
+        #playMusic {
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #008000;
+            color: white;
+            border: none;
+            box-shadow: 0px 0px 15px #00cc00;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Przycisk do odblokowania muzyki -->
+    <button id="playMusic">▶ Włącz muzykę</button>
+
+    <!-- Muzyka w tle -->
+    <audio id="bgMusic" loop>
+        <source src="https://media.vocaroo.com/mp3/1niulU8UNL2M" type="audio/mpeg">
+    </audio>
+
+    <div id="content">
+        <h1>Hej koleżanko, będziesz moją walentynką??? 💖</h1>
+        <img id="valentineImage" src="https://i.imgur.com/drAJFI1.png" alt="Valentine's Day Image" style="max-width: 300px; height: auto;">
+        <br/><br/>
+        <div class="button-container">
+            <button id="yesButton">💘 TAK!!!</button>
+            <button id="no">💔 NIE!!!</button>
+        </div>
+        <br/>
+        <button id="resetButton">🔄 Powrót</button>
+    </div>
+
+    <script>
+        // Wymuszenie odtwarzania dźwięku po kliknięciu przycisku
+        document.getElementById("playMusic").addEventListener("click", function() {
+            var audio = document.getElementById("bgMusic");
+            audio.volume = 0.5; // Ustawienie głośności na 50%
+            audio.play().then(() => {
+                document.getElementById("playMusic").style.display = "none"; // Ukryj przycisk po włączeniu muzyki
+            }).catch(error => {
+                console.log("Błąd odtwarzania dźwięku:", error);
+            });
+        });
+
+        document.getElementById("yesButton").addEventListener("click", function() {
+            alert("Kocham cię, miłego dnia! 💕");
+        });
+
+        document.getElementById("resetButton").addEventListener("click", function() {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
