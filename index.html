@@ -92,14 +92,14 @@
         <h1>Hej koleżanko, będziesz moją walentynką??? 💖</h1>
         <img id="valentineImage" src="https://i.imgur.com/drAJFI1.png" alt="Valentine's Day Image" style="max-width: 300px; height: auto;">
         <br/><br/>
-        <div class="button-container">
+        <div class="button-container" id="buttons">
             <button id="yesButton">💘 TAK!!!</button>
             <button id="no">💔 NIE!!!</button>
         </div>
         <br/>
         <button id="playMusic">▶ Włącz muzykę</button>
         <br/>
-        <button id="resetButton">🔄 Powrót</button>
+        <button id="resetButton" style="display: none;">🔄 Powrót</button>
     </div>
 
     <audio id="bgMusic" loop>
@@ -111,11 +111,11 @@
 
         // Losowe teksty
         const randomTexts = [
-            "Nie no weź... 💔",
-            "Aha nie miłooo 😢",
-            "Nie wiesz co tracisz 🤔",
-            "NIE ROB NADZEI 😞",
-            "Moje serce pęka na kawałki! 💔"
+            "No proszę, łamiesz mi serce! 💔",
+            "Naprawdę? To smutne... 😢",
+            "Jeszcze masz szansę zmienić zdanie! 🤔",
+            "Serio? A już miałem/miałam nadzieję... 😞",
+            "O nie! Moje serce pęka na kawałki! 💔"
         ];
 
         // Losowe obrazki
@@ -128,18 +128,15 @@
 
         // Generowanie losowego tekstu
         function generateRandomText() {
-            // Jeśli istnieje stary tekst, usuń go
             if (activeText) {
                 activeText.remove();
                 activeText = null;
             }
 
-            // Tworzenie nowego napisu
             const textElement = document.createElement("div");
             textElement.classList.add("random-text");
             textElement.textContent = randomTexts[Math.floor(Math.random() * randomTexts.length)];
 
-            // Losowa pozycja
             const maxWidth = window.innerWidth - 300;
             const maxHeight = window.innerHeight - 200;
             const x = Math.random() * maxWidth;
@@ -148,31 +145,35 @@
             textElement.style.left = `${x}px`;
             textElement.style.top = `${y}px`;
 
-            // Dodanie do dokumentu
             document.body.appendChild(textElement);
             activeText = textElement;
 
-            // Zmiana obrazka
             document.getElementById("valentineImage").src = randomImages[Math.floor(Math.random() * randomImages.length)];
 
-            // Po kliknięciu usuń napis i wygeneruj nowy
             textElement.addEventListener("click", function () {
                 generateRandomText();
             });
         }
 
-        // Obsługa kliknięcia przycisku "NIE"
+        // Obsługa kliknięcia "NIE"
         document.getElementById("no").addEventListener("click", function () {
-            document.getElementById("no").style.display = "none"; // Ukrywa "NIE"
+            document.getElementById("no").style.display = "none";
             generateRandomText();
         });
 
-        // Obsługa kliknięcia przycisku "TAK"
+        // Obsługa kliknięcia "TAK"
         document.getElementById("yesButton").addEventListener("click", function() {
             alert("Kocham cię, miłego dnia! 💕");
+            document.getElementById("valentineImage").src = "https://i.imgur.com/drAJFI1.png";
+            document.getElementById("buttons").style.display = "none";
+            document.getElementById("playMusic").style.display = "none";
+            if (activeText) {
+                activeText.remove();
+            }
+            document.getElementById("resetButton").style.display = "inline-block";
         });
 
-        // Obsługa kliknięcia przycisku "Powrót"
+        // Obsługa kliknięcia "Powrót"
         document.getElementById("resetButton").addEventListener("click", function() {
             location.reload();
         });
@@ -182,7 +183,7 @@
             var audio = document.getElementById("bgMusic");
             audio.volume = 0.5;
             audio.play().then(() => {
-                document.getElementById("playMusic").style.display = "none"; // Ukrywa przycisk po włączeniu muzyki
+                document.getElementById("playMusic").style.display = "none";
             }).catch(error => {
                 console.log("Błąd odtwarzania dźwięku:", error);
             });
